@@ -107,15 +107,33 @@ public class Playlist {
         }
     }
 
-    public void removeSongIndex(int index) {
+    void removeFirst() {
         if (isEmpty()) {
             return;
+        } else {
+            head = head.getNext();
         }
+    }
+
+    void removeLast() {
+        if (isEmpty()) {
+            return;
+        } else {
+            Song temp = head;
+            while (temp != tail) {
+                temp = temp.getNext();
+            }
+            temp.setNext(null);
+            tail = temp;
+        }
+    }
+
+    public void removeSongIndex(int index) {
         if (index < 0) {
             return;
         }
         if (index == 0) {
-            removeSong(head.getTitle());
+            removeFirst();
         } else {
             Song temp = head;
             int pos = 0;
@@ -130,8 +148,7 @@ public class Playlist {
                 return;
             }
             if (temp.getNext() == tail) {
-                removeSong(tail.getTitle());
-                tail = temp;
+                removeLast();
             } else {
                 curr = temp.getNext();
                 temp.setNext(curr);
@@ -166,17 +183,19 @@ public class Playlist {
             temp = temp.getNext();
         }
         for (int i = 0; i < songCount; i++) {
-            int randomRemoveIndex = rand.nextInt(songCount - i);
-            int randomAddIndex = rand.nextInt(songCount);
-            System.out.println(randomRemoveIndex + " - " + randomAddIndex);
+            int randomRemoveIndex = rand.nextInt(songCount);
+//            int randomAddIndex = rand.nextInt(songCount);
+//            System.out.println(randomRemoveIndex + " - " + randomAddIndex);
+//            if (randomRemoveIndex == randomAddIndex) continue;
             Song removedSong = findIndex(randomRemoveIndex);
             removeSongIndex(randomRemoveIndex);
-            addSongIndex(removedSong, randomAddIndex);
+//            addSongIndex(removedSong, randomAddIndex);
+            addSong(removedSong);
             if (removedSong == tail) {
                 tail = findIndex(songCount - 1);
             }
         }
-        curr = head;
+        curr = head;       
     }
 
     Song findIndex(int index) {

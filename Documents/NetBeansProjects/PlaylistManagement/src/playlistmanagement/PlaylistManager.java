@@ -23,7 +23,8 @@ public class PlaylistManager {
             System.out.println("Press 4 to shuffle the playlist");
             System.out.println("Press 5 to skip to the next song");
             System.out.println("Press 6 to skip to the previous song");
-            System.out.println("Press 7 to print out queue");
+            System.out.println("Press 7 to show song is playing");
+            System.out.println("Press 8 to print out queue");
             System.out.println("Press any key to exit");
             System.out.println("===============================================");
             System.out.print("Enter your option: ");
@@ -67,7 +68,14 @@ public class PlaylistManager {
                     System.out.println("You are skip to the previous song");
                     playlist.prevSong();
                     break;
-                case 7:
+                case 7:  
+                    try {
+                    System.out.println("You are playing " + playlist.getCurr().getTitle());
+                } catch (NullPointerException e) {
+                    System.err.println("Please choose one song");
+                }
+                break;
+                case 8:
                     playlist.print();
 //                    System.out.println("listening " + playlist.getCurr().getTitle() + "-" + playlist.getCurr().getArtist());
                     break;
