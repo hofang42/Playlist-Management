@@ -40,6 +40,7 @@ public class Algorithms {
     public void display(){
         System.out.println("Number of characters: " + strInput.getCharCounter());
         System.out.println("Number of words: " +strInput.getWordCounter());
-        System.out.println();
+        System.out.println();       
     }
+    
 }
