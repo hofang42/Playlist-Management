@@ -88,11 +88,14 @@ public class Playlist {
             return;
         }
         if (head.getTitle().equals(title)) {
-            head = head.getNext();
             if (curr == head) {
+                head = head.getNext();
                 curr = head;
             }
             return;
+        }
+        if (curr.getTitle().equals(title)) {
+            curr = curr.getNext();
         }
         Song temp = head;
         while (temp.getNext() != null) {
@@ -104,55 +107,6 @@ public class Playlist {
                 return;
             }
             temp = temp.getNext();
-        }
-    }
-
-    void removeFirst() {
-        if (isEmpty()) {
-            return;
-        } else {
-            head = head.getNext();
-        }
-    }
-
-    void removeLast() {
-        if (isEmpty()) {
-            return;
-        } else {
-            Song temp = head;
-            while (temp != tail) {
-                temp = temp.getNext();
-            }
-            temp.setNext(null);
-            tail = temp;
-        }
-    }
-
-    public void removeSongIndex(int index) {
-        if (index < 0) {
-            return;
-        }
-        if (index == 0) {
-            removeFirst();
-        } else {
-            Song temp = head;
-            int pos = 0;
-            while (temp.getNext() != null) {
-                if (index - 1 == pos) {
-                    break;
-                }
-                temp = temp.getNext();
-                pos++;
-            }
-            if (temp.getNext() == null) {
-                return;
-            }
-            if (temp.getNext() == tail) {
-                removeLast();
-            } else {
-                curr = temp.getNext();
-                temp.setNext(curr);
-            }
         }
     }
 
@@ -176,40 +130,35 @@ public class Playlist {
 
     public void shuffle() {
         Random rand = new Random();
-        Song temp = head;
         int songCount = 0;
+        Song temp = head;
+
         while (temp != null) {
             songCount++;
             temp = temp.getNext();
         }
-        for (int i = 0; i < songCount; i++) {
-            int randomRemoveIndex = rand.nextInt(songCount);
-//            int randomAddIndex = rand.nextInt(songCount);
-//            System.out.println(randomRemoveIndex + " - " + randomAddIndex);
-//            if (randomRemoveIndex == randomAddIndex) continue;
-            Song removedSong = findIndex(randomRemoveIndex);
-            removeSongIndex(randomRemoveIndex);
-//            addSongIndex(removedSong, randomAddIndex);
-            addSong(removedSong);
-            if (removedSong == tail) {
-                tail = findIndex(songCount - 1);
-            }
+
+        for (int i = songCount - 1; i > 0; i--) {
+            int randomIndex = rand.nextInt(i + 1);
+
+            Song song1 = findIndex(randomIndex);
+            Song song2 = findIndex(i);
+
+            swapSongs(song1, song2);
         }
-        curr = head;       
+
+        curr = head;
     }
 
     Song findIndex(int index) {
         if (index < 0 || head == null) {
             return null;
         }
-
         if (index == 0) {
             return head;
         }
-
         Song temp = head;
         int pos = 0;
-
         while (temp != null) {
             if (index == pos) {
                 break;
@@ -217,8 +166,48 @@ public class Playlist {
             temp = temp.getNext();
             pos++;
         }
-
         return temp;
+    }
+
+    public void swapSongs(Song song1, Song song2) {
+        if (song1 == null || song2 == null || song1 == song2) {
+            return;
+        }
+        Song pred1 = findPrevSong(song1);
+        Song pred2 = findPrevSong(song2);
+        if (pred1 != null) {
+            pred1.setNext(song2);
+        } else {
+            head = song2;
+        }
+        if (pred2 != null) {
+            pred2.setNext(song1);
+        } else {
+            head = song1;
+        }
+
+        Song temp = song1.getNext();
+        song1.setNext(song2.getNext());
+        song2.setNext(temp);
+
+        if (tail == song1) {
+            tail = song2;
+        } else if (tail == song2) {
+            tail = song1;
+        }
+    }
+
+    public Song findPrevSong(Song song) {
+        if (song == null || head == null || head == song) {
+            return null;
+        }
+        Song current = head;
+
+        while (current != null && current.getNext() != song) {
+            current = current.getNext();
+        }
+
+        return current;
     }
 
     public void print() {
@@ -229,4 +218,52 @@ public class Playlist {
         }
     }
 
+    //
+//    void removeFirst() {
+//        if (isEmpty()) {
+//            return;
+//        } else {
+//            head = head.getNext();
+//        }
+//    }
+//
+//    void removeLast() {
+//        if (isEmpty()) {
+//            return;
+//        } else {
+//            Song temp = head;
+//            while (temp != tail) {
+//                temp = temp.getNext();
+//            }
+//            temp.setNext(null);
+//            tail = temp;
+//        }
+//    }
+//    public void removeSongIndex(int index) {
+//        if (index < 0) {
+//            return;
+//        }
+//        if (index == 0) {
+//            removeFirst();
+//        } else {
+//            Song temp = head;
+//            int pos = 0;
+//            while (temp.getNext() != null) {
+//                if (index - 1 == pos) {
+//                    break;
+//                }
+//                temp = temp.getNext();
+//                pos++;
+//            }
+//            if (temp.getNext() == null) {
+//                return;
+//            }
+//            if (temp.getNext() == tail) {
+//                removeLast();
+//            } else {
+//                curr = temp.getNext();
+//                temp.setNext(curr);
+//            }
+//        }
+//    }
 }
